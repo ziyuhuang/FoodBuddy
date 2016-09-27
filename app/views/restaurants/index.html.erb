@@ -1,0 +1,24 @@
+<div class="container">
+
+  <div class="row search-row">
+    <%= form_tag("/restaurants", method: "get") do %>
+    <div class="input-field col s12 m6">
+      <%= label_tag 'search', 'Find' %>
+      <%= text_field_tag 'search', params[:search], :required => true, placeholder: 'Search by restaurant, food, drinks...', class: 'validate' %>
+    </div>
+    
+    <div class="input-field col s12 m6">
+      <%= label_tag 'location', 'Near' %>
+      <%= text_field_tag 'location', 'San Jose, CA',  :required => true, class: 'validate' %>
+    </div>
+    
+    <div class="row">
+      <div class="col s12">
+        <%= submit_tag('Search', class: 'btn btn-lg teal lighten-2 waves-effect waves-light search-button') %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+  <!-- Display a list of all restaurants -->
+  <%= render 'restaurants/restaurant' %>
+</div>

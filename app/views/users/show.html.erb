@@ -1,0 +1,85 @@
+<%# Used to show the current user profile and all his/her events %>
+<div id="profile-page-header" class="card">
+	<div class="row">
+		<div class="col s2 left-align profile">
+			<%if true%>
+			<%= image_tag(@user.picture.url, class: "responsive-img circle profile-picture-small") %>
+			<%end%>
+		</div>
+		<div class="col s2 left-align">
+			<h4 class="card-title grey-text text-darken-4"><%= @user.firstname %> <%= @user.lastname %></h4>
+			<p class="medium-small grey-text">Name</p>
+		</div>
+		<div class="col s3 left-align">
+			<h4 class="card-title grey-text text-darken-4"><%= @user.email %></h4>
+			<p class="medium-small grey-text">Email Address</p>
+		</div>
+		<div class="col s2 left-align">
+			<h4 class="card-title grey-text text-darken-4">In Progress</h4>
+			<p class="medium-small grey-text">Events</p>
+		</div>
+		<div class="col s2 left-align">
+			<h4 class="card-title grey-text text-darken-4">In Progress</h4>
+			<p class="medium-small grey-text">Following</p>
+		</div>
+	</div>
+</div>
+<div class="container main-section">
+	<h1 class="center"><%= @user.firstname %>'s Events</h1>
+	<div class="row">
+		<% @user_events.each do |event| %>
+		<div class="col s12 m6 l4">
+			<div class="card medium">
+				<%= link_to event_path(event), method: 'GET' do %>
+				<div class="card-image waves-effect waves-block waves-light">
+					<img class="activator" src="<%= (event.restaurant.image_url).sub('/ms', '/348s') %>">
+				</div>
+				<% end %>
+				<div class="card-content">
+					<span class="card-title activator grey-text text-darken-4">
+						<%= truncate(event.restaurant.name, :length => 20)%>
+						<i class="material-icons right">more_vert</i>
+					</span>
+					<div class="rating-image">
+						<img src="<%= event.restaurant.rating_img_url %>">
+						<p class="rating-view"><%= event.restaurant.review_count %> reviews</p>
+					</div>
+					
+					<p>Meet @ <%= event.time %></p>
+					<p>
+						Host: <%= link_to event.user.firstname+ " " +event.user.lastname, user_path(event.user) if event.user %>
+						<% if current_user != event.user && GuestList.exists?(event_id: event.id, user_id: current_user.id) == false %>
+							<%= link_to 'JOIN', event_path(event, :join => "true"), :class => 'right', method: 'GET' %>
+						<% end %>
+					</p>
+					
+					<div class="event-user">
+						<div class="user-info">
+						</div>
+						<div class="join-link">
+						</div>
+					</div>
+				</div>
+				<div class="card-reveal">
+					<span class="card-title grey-text text-darken-4">
+						<%= event.restaurant.name %>
+						<i class="material-icons right">close</i>
+					</span>
+					<p><%= event.restaurant.address.html_safe %></p>
+					<br>
+					<hr>
+					<br>
+					<div class="row valign-wrapper">
+						<div class="col s4">
+							<%= image_tag(event.user.picture.url, class: "responsive-img circle profile-picture-small") %>
+						</div>
+						<div class="col s8">
+							<p class="black-text"><%= event.message %></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<% end %>
+	</div>
+</div>
